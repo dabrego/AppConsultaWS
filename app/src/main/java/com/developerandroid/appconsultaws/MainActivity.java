@@ -1,5 +1,6 @@
 package com.developerandroid.appconsultaws;
 
+import android.os.StrictMode;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+
+import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +37,35 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        if(android.os.Build.VERSION.SDK_INT > 9){
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); StrictMode.setThreadPolicy(policy);
+        }
+
+    } // Ends onCreate
+
+    public void consultaTemperaturaGradosF(){
+        String NAMESPACE = "http://www.w3schools.com/xml/";
+        String URL="http://www.w3schools.com/xml/tempconvert.asmx";
+        String METHOD_NAME = "CelsiusToFahrenheit";
+        String SOAP_ACTION = "http://www.w3schools.com/xml/CelsiusToFahrenheit";
+        try {
+            // Modelo el request
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("Celsius", "37"); // Paso parametros al WS
+            // Modelo el Sobre
+            SoapSerializationEnvelope sobre = new SoapSerializationEnvelope(SoapEnvelope.VER11); sobre.dotNet = true;
+            sobre.setOutputSoapObject(request);
+            // Modelo el transporte
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+            // Llamada
+            transporte.call(SOAP_ACTION, sobre);
+            // Resultado
+            SoapPrimitive resultado = (SoapPrimitive) sobre.getResponse();
+            Toast.makeText(getApplicationContext(), "Resultado: " + resultado.toString(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "error: " + e.getMessage() + " ", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

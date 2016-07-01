@@ -12,8 +12,14 @@
     tools:context="com.developerandroid.appconsultaws.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="New Button"
+        android:id="@+id/tempF"
+        android:onClick="consultaTemperaturaGradosF"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp" />
 </RelativeLayout>
